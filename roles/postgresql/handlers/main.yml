@@ -1,0 +1,6 @@
+---
+- name: restart postgresql-9.6
+  service: name=postgresql-9.6 state=restarted
+
+- name:  systemctl daemon-reload
+  service: name=systemctl state=daemon-reload

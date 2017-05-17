@@ -1,0 +1,12 @@
+---
+- name: Install Postgresql
+  hosts: postgresql
+  remote_user: ansible
+
+  roles: 
+      - postgresql 
+  
+  environment:
+     http_proxy: "http://proxy.example.com:8080" 
+     https_proxy: "http://proxy.example.com:8080"
+     no_proxy: "127.0.0.1, localhost" 

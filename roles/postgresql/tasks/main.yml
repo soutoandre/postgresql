@@ -1,0 +1,42 @@
+---
+- name: Install Postgres
+  yum: name={{ item }} state=present
+  with_items:
+    - postgresql96-server
+    - python-psycopg2
+
+  tags:
+    - postgresql
+
+- name: Create data directory Postgressql
+  file: path=/pgsql/9.6/data state=directory  owner=postgres group=postgres  mode=700
+  
+  tags:
+    - postgresql
+
+- name: Template service postgresql 
+  copy: src=files/postgresql-9.6.service dest=/usr/lib/systemd/system/postgresql-9.6.service 
+  notify: systemctl daemon-reload
+ 
+  tags:
+    - postgresql
+
+- name: Config pg_hba and postgresql
+  template:  src={{ item }}.conf.j2  dest=/pgsql/9.6/data/{{ item }}.conf  owner=postgres group=postgres  mode=700
+  with_items:
+     - pg_hba
+     - postgresql
+  notify: restart postgresql-9.6
+
+  tags:
+    - postgresql
+
+- name: set user postgres
+  postgresql_user:  name=postgres password={{ postgres_pass }}  login_host=localhost login_user=postgres login_password={{ postgres_pass}}  state=present
+  
+  tags:
+    - postgresql
+
+- name: Install Packages from postgres Repo
+  include: installsetup.yml
+  when: installpostgre == "true"

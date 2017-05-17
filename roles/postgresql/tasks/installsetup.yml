@@ -1,0 +1,28 @@
+---
+- name: Install the  repo PostgreSQL
+  yum: name=https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm state=present
+  
+  tags:
+    - postgresql  
+
+- name: Install Postgres
+  yum: name={{ item }} state=present
+  with_items:
+    - postgresql96-server
+    - python-psycopg2
+
+  tags:
+    - postgresql
+
+
+- name: Initial data Postgresql
+  command: sudo su postgres -c '/usr/pgsql-9.6/bin/initdb -D /pgsql/9.6/data'
+
+  tags:
+    - postgresql
+
+- name: Start service Postgresql
+  service: name=postgresql-9.6 state=started enabled=yes
+
+  tags:
+    - postgresql
