@@ -68,5 +68,10 @@ LABEL=POSTGRESQL   /pgsql             xfs    defaults        1 2
 mount -av
 
 
+## Run playbook to install PostgreSQL 
 
-```
+sudo ansible-playbook site.yml -i inventory  -e " host=postgresql installpentaho=true" 
+
+## To verify installation of PostgreSQL
+
+sudo ansible-playbook site.yml -i inventory  -e " host=postgresql installpentaho=false" 
