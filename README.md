@@ -6,7 +6,7 @@
 
 ## Intital setup
 
-1. Disable selinux and firewalld
+## 1. Disable selinux and firewalld
 
 ## SELinux
 
@@ -32,7 +32,7 @@ ansible ALL=(root)  NOPASSWD: ALL
 host    all             ansible      127.0.1.1/32       md5
 
 
-2.  This is sugestion before run the playbook
+### 2.  This is sugestion before run the playbook
 
 ### Creating Volume Group **VG00**
 
