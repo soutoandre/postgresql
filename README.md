@@ -4,7 +4,7 @@
 
 ## Install database PostgreSQL and configuration pg_hba.conf to connect users at Active Directory and export metrics
 
-# docker used:
+## Docker used:
 - <a href="https://github.com/wrouesnel/postgres_exporter" target="_blank"> wrouesnel/postgres_exporter </a>
 
 ## Intital setup
