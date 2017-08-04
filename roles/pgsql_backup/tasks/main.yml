@@ -1,0 +1,14 @@
+---
+- name: Create file pgpass Postgres 
+  template:  src=pgpass.conf.j2  dest=/var/lib/pgsql/.pgpass.conf  owner=postgres group=postgres  mode=600
+  when: pgsql_backup_enable
+  tags:
+    - pgsql_backup
+
+- name: Start backup full Postgresql
+  command: /usr/pgsql-{{ pg_version }}/bin/pg_dumpall -f /pgsql/backup/bkp_full_pgsql{{ ansible_date_time.date }}-{{ ansible_date_time.hour }}":"{{ ansible_date_time.minute }}":"{{ ansible_date_time.second }}.sql
+  become: true
+  become_user: postgres
+  when: pgsql_backup_enable
+  tags:
+    - pgsql_backup

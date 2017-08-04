@@ -1,0 +1,5 @@
+---
+## Postgresql
+installpostgre: False
+postgres_pass: password
+ldapbindpass_postgre: password

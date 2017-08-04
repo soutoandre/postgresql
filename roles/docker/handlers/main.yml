@@ -1,0 +1,7 @@
+- name:  docker restart
+  service: name=docker state=restarted
+
+- name:  systemctl daemon-reload
+  service: name=systemctl state=daemon-reload
+
+

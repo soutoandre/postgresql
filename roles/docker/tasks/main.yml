@@ -1,0 +1,71 @@
+---
+- name: Install repo  docker-ce
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+  tags:
+    - docker
+
+
+- name:  Install docker-ce
+  yum: name={{ item }}  state=present
+  with_items:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+    - docker-ce 
+    - python-dockerpty
+    - python-docker-py
+    - python-docker-pycreds
+  tags:
+    - docker
+
+- name:  Start | Enable
+  service: name=docker  state=started enabled=yes
+  tags:
+    - docker
+  
+
+- name: Create Docker directory proxy
+  file: path=/etc/systemd/system/docker.service.d state=directory
+  tags:
+   - docker
+
+- name: Conf proxy to docker
+  template: src=http-proxy.conf.j2 dest=/etc/systemd/system/docker.service.d/http-proxy.conf owner=root group=root  mode=640
+  notify: systemctl daemon-reload
+  tags: 
+   - docker
+
+- name: Create path
+  file: path=/pgsql/docker state=directory  owner=700  group=700
+  tags:
+    - docker
+
+- name: launch  pgsql_metrics  Container
+  docker_container:
+    name: postgres_exporter
+    image: wrouesnel/postgres_exporter
+    ports:
+      - 9187:9187
+    env: DATA_SOURCE_NAME="postgresql://postgres:{{ postgres_pass }}@{{ ansible_fqdn }}:5432/?sslmode=disable"
+    
+  tags:
+     - docker
+
+
+- name: launch  node_exporter Container
+  docker_container:
+    name: node-exporter
+    image: quay.io/prometheus/node-exporter
+    ports:
+      - 9100:9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    network_mode: host
+    command: ["-collector.procfs /host/proc", "-collector.sysfs /host/sys", "-collector.filesystem.ignored-mount-points ^/(sys|proc|dev|host|etc)($|/)" ]
+     
+  tags:
+     - docker
