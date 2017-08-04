@@ -6,6 +6,7 @@
 
 ## Docker used:
 - <a href="https://github.com/wrouesnel/postgres_exporter" target="_blank"> wrouesnel/postgres_exporter </a>
+- <a href="https://quay.io/repository/prometheus/node-exporter" target="_blank"> quay.io/prometheus/node-exporter </a>
 
 ## Intital setup
 
